@@ -69,7 +69,8 @@ public class ALUTester {
         System.out.println(longWord3.toString() + " " + alu.toString());
 
         //testing SLL
-        longWord1.set(10);
+        longWord1.set(-1);
+        longWord1.clearBit(30);
         longWord2.set(1);
         System.out.printf("\n\ntesting sll\n");
         System.out.println(longWord1.toString());
