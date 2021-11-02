@@ -3,7 +3,6 @@ public class ALU {
     private Boolean NF; //set true if negative
     private Boolean CF; //set true if last bit carry-out is 1
     private Boolean OF; //set true if overflow
-    private LongWord longWord;
 
 
     public ALU(){
@@ -11,7 +10,7 @@ public class ALU {
         this.NF = false;
         this.CF = false;
         this.OF = false;
-        this.longWord = new LongWord();
+        //LongWord longWord = new LongWord();
     }
 
     public int getZF(){
@@ -30,7 +29,31 @@ public class ALU {
         return this.OF?1:0;
     }
 
-    public LongWord rippleCarryAdd(LongWord a, LongWord holderb, Boolean cin){
+    public LongWord operate(int code, LongWord op1, LongWord op2){
+        if(code == 0){
+            return and(op1,op2);
+        }else if(code == 1){
+            return or(op1,op2);
+        }else if(code == 2){
+            return xor(op1,op2);
+        }else if(code == 3){
+            return add(op1,op2);
+        }else if(code == 4){
+            return sub(op1,op2);
+        }else if(code == 5){
+            return sll(op1,op2);
+        }else if(code == 6){
+            return srl(op1,op2);
+        }else if(code == 7){
+            return sra(op1,op2);
+        }else{
+            return null;
+        }
+    }
+
+    private LongWord rippleCarryAdd(LongWord a, LongWord holderb, Boolean cin){
+        LongWord longWord = new LongWord();
+
         LongWord b = new LongWord();
         b.copy(holderb);
 
@@ -50,26 +73,26 @@ public class ALU {
         for(int i=0; i<32; i++){
             if(a.getBit(i) && b.getBit(i)){
                 if(carryOut){
-                    this.longWord.setBit(i);
+                    longWord.setBit(i);
                     carryOut = true;
                 }else{
-                    this.longWord.clearBit(i);
+                    longWord.clearBit(i);
                     carryOut = true;
                 }
             }else if(a.getBit(i) || b.getBit(i)){
                 if(carryOut){
-                    this.longWord.clearBit(i);
+                    longWord.clearBit(i);
                     carryOut = true;
                 }else{
-                    this.longWord.setBit(i);
+                    longWord.setBit(i);
                     carryOut = false;
                 }
             }else{
                 if(carryOut){
-                    this.longWord.setBit(i);
+                    longWord.setBit(i);
                     carryOut = false;
                 }else{
-                    this.longWord.clearBit(i);
+                    longWord.clearBit(i);
                     carryOut = false;
                 }
             }
@@ -83,8 +106,100 @@ public class ALU {
         }else{
             this.OF = false;
         }
-        return this.longWord;
+        return longWord;
     }
 
+    private LongWord and(LongWord op1, LongWord op2){
+        LongWord longWord = new LongWord();
+        longWord.copy(op1);
+        longWord = longWord.and(op2);
+        this.NF = longWord.getBit(31);
+        this.ZF = longWord.isZeor();
+        this.CF = false;
+        this.OF = false;
+        return longWord;
+    }
 
+    private LongWord or(LongWord op1, LongWord op2){
+        LongWord longWord = new LongWord();
+        longWord.copy(op1);
+        longWord = longWord.or(op2);
+        this.NF = longWord.getBit(31);
+        this.ZF = longWord.isZeor();
+        this.CF = false;
+        this.OF = false;
+        return longWord;
+    }
+
+    private LongWord xor(LongWord op1, LongWord op2){
+        LongWord longWord = new LongWord();
+        longWord.copy(op1);
+        longWord = longWord.xor(op2);
+        this.NF = longWord.getBit(31);
+        this.ZF = longWord.isZeor();
+        this.CF = false;
+        this.OF = false;
+        return longWord;
+    }
+
+    private LongWord add(LongWord op1, LongWord op2){
+        LongWord longWord = new LongWord();
+        longWord = rippleCarryAdd(op1,op2,false);
+        this.NF = longWord.getBit(31);
+        this.ZF = longWord.isZeor();
+        return longWord;
+    }
+
+    private LongWord sub(LongWord op1, LongWord op2){
+        LongWord longWord = new LongWord();
+        longWord = rippleCarryAdd(op1,op2,true);
+        this.NF = longWord.getBit(31);
+        this.ZF = longWord.isZeor();
+        return longWord;
+    }
+
+    private LongWord sll(LongWord op1, LongWord op2){
+        LongWord longWord = new LongWord();
+        longWord.copy(op1);
+        longWord = longWord.shiftLeftLogical(op2.getSigned());
+        this.NF = longWord.getBit(31);
+        this.ZF = longWord.isZeor();
+        this.CF = false;
+        if(op2.getSigned() == 1){
+            if(longWord.getBit(31) != op1.getBit(31)){
+                this.OF = true;
+            }else{
+                this.OF = false;
+            }
+        }else{
+            this.OF = false;
+        }
+        return longWord;
+    }
+
+    private LongWord srl(LongWord op1, LongWord op2){
+        LongWord longWord = new LongWord();
+        longWord.copy(op1);
+        longWord = longWord.shiftRightLogical(op2.getSigned());
+        this.NF = longWord.getBit(31);
+        this.ZF = longWord.isZeor();
+        this.CF = false;
+        this.OF = false;
+        return longWord;
+    }
+
+    private LongWord sra(LongWord op1, LongWord op2){
+        LongWord longWord = new LongWord();
+        longWord.copy(op1);
+        longWord = longWord.shiftRightArithmetic(op2.getSigned());
+        this.NF = longWord.getBit(31);
+        this.ZF = longWord.isZeor();
+        this.CF = false;
+        this.OF = false;
+        return longWord;
+    }
+
+    public String toString(){
+        return "ZF: " + getZF() + "  NF: " + getNF() + "  CF: " + getCF() + "  OF: " + getOF();
+    }
 }
