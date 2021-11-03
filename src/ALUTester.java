@@ -1,3 +1,8 @@
+/**
+ * @author Yunrui Huang
+ * 11/2/2021
+ */
+
 public class ALUTester {
     public ALUTester(){
 
@@ -12,27 +17,37 @@ public class ALUTester {
         System.out.println(longWord1.toString());
         System.out.println(longWord2.toString());
 
-        //testing add
+        /**
+         * testing add
+         */
         longWord3 = alu.operate(3,longWord1,longWord2);
         System.out.println(longWord3.toString() + " " + alu.toString());
         //System.out.println("2: " + longWord2.toString());
 
-        //testing sub
+        /**
+         * testing sub
+         */
         longWord3 = alu.operate(4,longWord1,longWord2);
         System.out.println(longWord3.toString() + " " + alu.toString());
 
-        //testing carry out flag
+        /**
+         * testing carry out flag
+         */
         //System.out.println("3: " + longWord2.toString());
         longWord1 = alu.operate(3,longWord3,longWord2);
         System.out.println(longWord1.toString() + " " + alu.toString());
 
-        //testing overflow flag
+        /**
+         * testing overflow flag
+         */
         longWord2.set(-1);
         longWord3.set(-2147483648);
         longWord3 = alu.operate(3,longWord3, longWord2);
         System.out.println(longWord3.toString() + " " + alu.toString());
 
-        //testing and
+        /**
+         * testing and
+         */
         longWord1.set(10);
         longWord2.set(1000);
         System.out.printf("\n\ntesting and\n");
@@ -41,7 +56,9 @@ public class ALUTester {
         longWord3 = alu.operate(0,longWord1,longWord2);
         System.out.println(longWord3.toString() + " " + alu.toString());
 
-        //testing or
+        /**
+         * testing or
+         */
         longWord1.set(10);
         longWord2.set(1000);
         System.out.printf("\n\ntesting or\n");
@@ -50,7 +67,9 @@ public class ALUTester {
         longWord3 = alu.operate(1,longWord1,longWord2);
         System.out.println(longWord3.toString() + " " + alu.toString());
 
-        //testing xor
+        /**
+         * testing xor
+         */
         longWord1.set(10);
         longWord2.set(1000);
         System.out.printf("\n\ntesting xor\n");
@@ -59,7 +78,9 @@ public class ALUTester {
         longWord3 = alu.operate(2,longWord1,longWord2);
         System.out.println(longWord3.toString() + " " + alu.toString());
 
-        //testing Not
+        /**
+         * testing Not
+         */
         longWord1.set(10);
         longWord2.set(-1);
         System.out.printf("\n\ntesting not\n");
@@ -68,7 +89,9 @@ public class ALUTester {
         longWord3 = alu.operate(2,longWord1,longWord2);
         System.out.println(longWord3.toString() + " " + alu.toString());
 
-        //testing SLL
+        /**
+         * testing SLL
+         */
         longWord1.set(-1);
         longWord1.clearBit(30);
         longWord2.set(1);
@@ -78,7 +101,9 @@ public class ALUTester {
         longWord3 = alu.operate(5,longWord1,longWord2);
         System.out.println(longWord3.toString() + " " + alu.toString());
 
-        //testing SRL
+        /**
+         * testing SRL
+         */
         longWord1.set(1000);
         longWord2.set(2);
         System.out.printf("\n\ntesting srl\n");
@@ -87,7 +112,9 @@ public class ALUTester {
         longWord3 = alu.operate(6,longWord1,longWord2);
         System.out.println(longWord3.toString() + " " + alu.toString());
 
-        //testing SRA
+        /**
+         * testing SRA
+         */
         longWord1.set(-1000);
         longWord2.set(3);
         System.out.printf("\n\ntesting sra\n");
